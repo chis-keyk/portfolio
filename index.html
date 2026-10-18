@@ -200,6 +200,21 @@
       -webkit-mask-image:linear-gradient(#000 72%,transparent 100%);
       mask-image:linear-gradient(#000 72%,transparent 100%)}
   }
+
+  /* ── intake form ── */
+  .intake{padding:4.5rem 5vw 2rem}
+  .intake-card{max-width:52rem;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:2rem clamp(1.2rem,4vw,2.6rem) 2.2rem;box-shadow:0 30px 80px -40px rgba(0,0,0,.7)}
+  .intake h2{text-align:left;margin:0 0 .35rem}
+  .intake-lede{color:var(--dim);font-size:.98rem;margin:0 0 1.6rem}
+  .f-row.two{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+  .intake label{display:flex;flex-direction:column;gap:.3rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--dim);margin-bottom:.9rem}
+  .intake input,.intake textarea{background:var(--bg2);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:.7rem .85rem;font:inherit;font-size:1rem;outline:none;transition:border-color .15s, box-shadow .15s}
+  .intake input:focus,.intake textarea:focus{border-color:rgba(180,122,154,.55);box-shadow:0 0 0 3px rgba(180,122,154,.12)}
+  .intake .f-consent{flex-direction:row;gap:.6rem;align-items:flex-start;font-size:.74rem;line-height:1.5;margin:1rem 0 1.2rem}
+  .intake .f-consent input{width:1.05rem;height:1.05rem;margin-top:.1rem;accent-color:#B47A9A}
+  .intake .f-send{width:100%;border:none}
+  .intake .f-note{min-height:1.2em;font-size:.75rem;color:var(--rose);margin:.7rem 0 0;text-align:center}
+
   @media(max-width:920px){
     header{grid-template-columns:1fr;padding-top:7rem;min-height:auto}
     .hero-visual{max-width:440px;margin:0 auto;padding-bottom:3rem}
@@ -228,6 +243,10 @@
       background:linear-gradient(180deg,rgba(110,95,199,.5),rgba(180,122,154,.25))}
     .about-split{grid-template-columns:1fr}
     .tools-grid{grid-template-columns:1fr}
+  }
+    .f-row.two{grid-template-columns:1fr;gap:.35rem}
+    .intake label{margin-bottom:.55rem}
+    .intake-card{padding:1.5rem 1.2rem 1.7rem;border-radius:14px}
   }
 </style>
 </head>
@@ -375,6 +394,33 @@
   <a class="mail" href="mailto:workwithmarianesophia@gmail.com">workwithmarianesophia@gmail.com</a>
   <p class="mono" style="color:var(--dim);font-size:.78rem;margin-top:1.6rem">remote · manila-based. You keep every automation I build.</p>
 </section>
+
+  <section class="intake" id="intake">
+    <div class="intake-card">
+      <h2>ready in two minutes?</h2>
+      <p class="intake-lede">Tell me what to take off your plate. I reply within the day.</p>
+      <form id="intake-form" autocomplete="on">
+        <div class="f-row two">
+          <label><span>name</span><input name="name" required maxlength="80"></label>
+          <label><span>company</span><input name="company" required maxlength="80"></label>
+        </div>
+        <div class="f-row two">
+          <label><span>mobile number</span><input name="mobile" type="tel" required maxlength="30"></label>
+          <label><span>email</span><input name="email" type="email" required maxlength="120"></label>
+        </div>
+        <label class="f-wide"><span>what help do you need?</span>
+          <textarea name="help" rows="3" required maxlength="600" placeholder="e.g. my inbox and calendar eat my mornings..."></textarea>
+        </label>
+        <label class="f-consent">
+          <input type="checkbox" name="consent" required>
+          <span>I agree to be contacted about this request. My details are used only for this conversation.</span>
+        </label>
+        <button class="btn-primary f-send" type="submit">send request</button>
+        <p class="f-note mono" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
 </main>
 
 <footer>
@@ -510,5 +556,23 @@
   })();
   </script>
 
+  <script>
+  /* intake form -> Apps Script Web App (set ENDPOINT after deploying script) */
+  (function(){
+    const form=document.getElementById('intake-form'); if(!form) return;
+    const ENDPOINT='__APPS_SCRIPT_URL__';
+    const note=form.querySelector('.f-note'); const btn=form.querySelector('.f-send');
+    form.addEventListener('submit',async e=>{
+      e.preventDefault();
+      if(ENDPOINT.includes('APPS_SCRIPT')){note.textContent='form not wired yet — email works meanwhile';return}
+      btn.disabled=true; const old=btn.textContent; btn.textContent='sending...';
+      try{
+        const data=Object.fromEntries(new FormData(form));
+        await fetch(ENDPOINT,{method:'POST',body:new URLSearchParams(data)});
+        form.innerHTML='<p style="font-size:1.15rem;margin:.4rem 0 1rem">✓ request sent — I reply within the day.</p><p style="color:var(--dim);font-size:.9rem">Urgent? workwithmarianesophia@gmail.com</p>';
+      }catch(err){ note.textContent='send failed — email me directly: workwithmarianesophia@gmail.com'; btn.disabled=false; btn.textContent=old; }
+    });
+  })();
+  </script>
 </body>
 </html>
