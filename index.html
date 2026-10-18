@@ -203,18 +203,24 @@
   @media(max-width:920px){
     header{grid-template-columns:1fr;padding-top:7rem;min-height:auto}
     .hero-visual{max-width:440px;margin:0 auto;padding-bottom:3rem}
-    .float-panel{right:0;bottom:-4%;width:82%}
+    .float-panel{right:-4%;bottom:0;width:58%;max-height:34%;overflow:hidden;-webkit-mask-image:linear-gradient(#000 62%,transparent 100%);mask-image:linear-gradient(#000 62%,transparent 100%)}
     .glass.g-focus{right:0}
     .glass.g-years{left:0;bottom:16%}
     .stats{grid-template-columns:repeat(2,1fr);margin:0}
     .stats-sec{padding:4rem 5vw}
     .craft-grid{grid-template-columns:1fr!important}
-    .repo-item{grid-template-columns:1fr;gap:.4rem}
-    .repo-stack{text-align:left}
+    .repo-item{grid-template-columns:auto 1fr;gap:.45rem .9rem;align-items:baseline}
+    .repo-date{white-space:nowrap;font-size:.68rem}
+    .repo-name{min-width:0}
+    .repo-name .pill{display:inline-block}
+    .repo-stack{grid-column:2;text-align:left;font-size:.66rem}
+    .repo-blurb{grid-column:2;font-size:.9rem}
     nav .links{display:none}
     .logo > span[style]{display:none}
     nav{padding:12px 4vw}
-    .process{flex-direction:column;gap:2.2rem}
+    .process{grid-template-columns:1fr;gap:2.4rem}
+    .p-step{padding-top:3.4rem}
+    .p-step p{max-width:34rem}
     .p-step:not(:last-child)::after{top:3.4rem;left:1.4rem;right:auto;bottom:auto;height:auto;width:1px;
       background:linear-gradient(180deg,rgba(110,95,199,.5),rgba(180,122,154,.25))}
     .about-split{grid-template-columns:1fr}
