@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mariane Sophia · AI-powered Executive Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300..800;1,300..800&family=Instrument+Serif:ital@0;1&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* palette fusion: Terminal Boutique base + Liva purple depth */
+    --bg:#0B0E1A; --bg2:#131024; --ink:#F3E9EC; --dim:#A79AB4;
+    --rose:#E8A2C8; --rose-soft:rgba(180,122,154,.14); --peach:#C9BFF2; --violet:#6E5FC7;
+    --grid:rgba(243,233,236,.045); --line:rgba(243,233,236,.1);
+    --card:#191430; --card2:#201838; --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .serif{font-family:'Instrument Serif',serif}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--rose);color:#0B0E1A}
+
+  /* ── atmosphere: grid + drifting glows (kept from v2) ── */
+  .bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:44px 44px;
+    mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,black 40%,transparent 100%)}
+  .glow{position:fixed;z-index:0;pointer-events:none;border-radius:50%;filter:blur(90px);opacity:.5}
+  .glow.g1{width:560px;height:560px;background:radial-gradient(circle,rgba(180,122,154,.32),transparent 65%);top:-170px;right:-120px;animation:drift 14s ease-in-out infinite alternate}
+  .glow.g2{width:460px;height:460px;background:radial-gradient(circle,rgba(201,191,242,.3),transparent 65%);bottom:8%;left:-150px;animation:drift 18s ease-in-out infinite alternate-reverse}
+  @keyframes drift{to{transform:translate(60px,40px) scale(1.08)}}
+  nav,main,footer{position:relative;z-index:1}
+
+  /* ── eyebrow badges (Nexora/CodeCraft move) ── */
+  .badge{display:inline-flex;align-items:center;gap:.5rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--rose);background:var(--rose-soft);border:1px solid rgba(180,122,154,.35);border-radius:99px;padding:.45rem 1.05rem;margin-bottom:1.5rem}
+  .badge .ok{color:#A8C4B8}
+
+  /* ── nav ── */
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:14px 5vw;
+    background:rgba(12,11,16,.75);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .logo{display:flex;align-items:center;gap:.65rem;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:1.02rem}
+  .logo .she{background:var(--rose);color:#0B0E1A;border-radius:7px;padding:2px 8px;font-style:italic}
+  nav .links{display:flex;gap:24px;font-size:.9rem;color:var(--dim)}
+  nav .links a{transition:color .2s}
+  nav .links a:hover{color:var(--rose)}
+  .nav-cta{font-family:'JetBrains Mono',monospace;font-size:.8rem;border:1px solid var(--rose);color:var(--rose);padding:8px 18px;border-radius:999px;transition:all .2s}
+  .nav-cta:hover{background:var(--rose);color:#0B0E1A;box-shadow:0 0 24px rgba(180,122,154,.5)}
+
+  /* ── hero: Liva's floating glass cards + CodeCraft's photo-in-glow ── */
+  header{min-height:100vh;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:2rem;padding:8rem 5vw 4rem;max-width:1360px;margin:0 auto}
+  .boot{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--dim);margin-bottom:1.4rem;line-height:1.9}
+  .boot .ok{color:#A8C4B8}.boot .rose{color:var(--rose)}
+  h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(2.1rem,7vw,5.7rem);line-height:1.04;margin-bottom:1.3rem;letter-spacing:-.01em}
+  h1 .rose{color:var(--rose);font-style:italic}
+  .lede{font-size:1.16rem;color:var(--dim);max-width:32rem}
+  .lede b{color:var(--ink);font-weight:600}
+  .hero-cta{display:flex;gap:1rem;margin-top:2.4rem;flex-wrap:wrap}
+  .btn-primary{background:var(--rose);color:#0B0E1A;font-weight:700;padding:1rem 2rem;border-radius:10px;box-shadow:0 0 32px rgba(180,122,154,.4);transition:all .2s}
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 48px rgba(180,122,154,.6)}
+  .btn-ghost{font-family:'JetBrains Mono',monospace;font-size:.85rem;border:1px solid var(--line);color:var(--dim);padding:1rem 1.5rem;border-radius:10px;transition:all .2s}
+  .btn-ghost:hover{border-color:var(--rose);color:var(--rose)}
+  .avail{display:flex;align-items:center;gap:.7rem;margin-top:2.4rem;font-size:.82rem;color:var(--dim)}
+  .avail .dot{width:9px;height:9px;border-radius:50%;background:#A8C4B8;box-shadow:0 0 14px rgba(125,219,163,.7);animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{50%{box-shadow:0 0 6px rgba(125,219,163,.3)}}
+
+  .hero-visual{position:relative}
+  .hero-halo{position:absolute;left:-14%;right:-14%;top:-4%;height:88%;z-index:0;pointer-events:none;
+    background:radial-gradient(ellipse at 55% 38%,rgba(110,95,199,.58),rgba(180,122,154,.18) 48%,transparent 72%);
+    filter:blur(34px);border-radius:50%}
+  .hero-photo{position:relative;z-index:1;display:block;width:100%;aspect-ratio:4/5;object-fit:cover;
+    -webkit-mask-image:radial-gradient(ellipse 88% 82% at 50% 46%,black 52%,transparent 97%);
+    mask-image:radial-gradient(ellipse 88% 82% at 50% 46%,black 52%,transparent 97%)}
+  .float-panel{position:absolute;z-index:2;right:-4%;bottom:-14%;width:42%;min-width:200px;box-shadow:0 40px 90px -30px rgba(0,0,0,.85)}
+  /* Liva glass cards over the hero */
+  .glass{position:absolute;z-index:2;background:rgba(24,18,34,.72);backdrop-filter:blur(10px);border:1px solid rgba(243,233,236,.12);
+    border-radius:14px;padding:1rem 1.2rem;box-shadow:0 24px 60px -24px rgba(0,0,0,.8)}
+  .glass.g-focus{top:0;right:-10%;font-size:.78rem;line-height:1.5;max-width:11rem}
+  .glass.g-focus b{color:var(--rose);font-weight:600;display:block;margin-bottom:.2rem}
+  .glass.g-years{bottom:14%;left:-8%;text-align:center}
+  .glass.g-years .big{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.6rem;color:var(--rose)}
+  .glass.g-years .what{font-size:.72rem;color:var(--dim)}
+
+  /* ── section scaffolding ── */
+  section{padding:5rem 5vw;max-width:1220px;margin:0 auto}
+  .sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2.4rem;flex-wrap:wrap;gap:.8rem}
+  h2{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(2.1rem,3.6vw,3.2rem)}
+  h2 .rose{color:var(--rose);font-style:italic}
+  h2 .script{color:var(--peach);font-family:'Instrument Serif',serif;font-style:italic}
+  .sec-head .mono{color:var(--dim);font-size:.8rem}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:1.7rem}
+  .card h4{font-size:1.05rem;margin-bottom:.5rem}
+  .card h4 .mono{color:var(--rose);margin-right:.5rem;font-size:.85rem}
+  .card p{font-size:.9rem;color:var(--dim)}
+
+  /* ── value section: Nexora's icon-chip cards ── */
+  .chip{display:inline-flex;width:2.6rem;height:2.6rem;border-radius:11px;background:rgba(110,95,199,.16);border:1px solid rgba(110,95,199,.4);align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1rem}
+  .chip.rose{background:var(--rose-soft);border-color:rgba(180,122,154,.4)}
+
+  /* ── CodeCraft tech-chips row (inside hero right) ── */
+  .tech-row{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:2rem}
+  .tech-chip{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--peach);border:1px solid rgba(255,179,160,.3);background:rgba(255,179,160,.07);border-radius:9px;padding:.35rem .8rem}
+
+  /* ── stats grid: Nexora's icon-stat cards ── */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem;margin:0 5vw}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:1.7rem 1.2rem;display:flex;gap:1rem;align-items:center;transition:all .2s}
+  .stat:hover{border-color:var(--rose);transform:translateY(-5px);box-shadow:0 0 40px -12px rgba(180,122,154,.35)}
+  .stat .chip{margin:0;flex:none}
+  .stat .big{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.9rem;color:var(--ink);line-height:1.1}
+  .stat .big .u{color:var(--rose)}
+  .stat .what{font-size:.78rem;color:var(--dim);margin-top:.15rem}
+
+  /* ── repo-style work.log list (kept — it's Mariane's signature) ── */
+  .repo{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .repo-head{display:flex;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--dim)}
+  .repo-head .stars{color:var(--rose)}
+  .repo-item{display:grid;grid-template-columns:120px 1fr auto;gap:1.3rem;padding:1.3rem 20px;border-bottom:1px solid rgba(243,233,236,.05);align-items:baseline;transition:background .15s}
+  .repo-item:last-child{border-bottom:none}
+  .repo-item:hover{background:rgba(180,122,154,.05)}
+  .repo-date{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--dim)}
+  .repo-name{font-weight:600;font-size:1.06rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+  .pill{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.06em;padding:3px 9px;border-radius:99px;border:1px solid}
+  .pill.live{color:#A8C4B8;border-color:rgba(125,219,163,.4);background:rgba(125,219,163,.08)}
+  .pill.ship{color:var(--rose);border-color:rgba(180,122,154,.4);background:var(--rose-soft)}
+  .repo-blurb{grid-column:2;font-size:.92rem;color:var(--dim);max-width:44rem}
+  .repo-stack{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--dim);text-align:right}
+  .repo-stack b{color:var(--peach);font-weight:500}
+
+  /* ── method: photo LEFT in soft frame + cards right (locked) ── */
+  .about-split{display:grid;grid-template-columns:.85fr 1.15fr;gap:2.6rem;align-items:start}
+  .about-photo{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--bg2);box-shadow:0 30px 70px -35px rgba(0,0,0,.7)}
+  .about-photo img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}
+  .about-photo .frame-tag{position:absolute;bottom:.8rem;left:.8rem;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--peach);background:rgba(12,11,16,.7);backdrop-filter:blur(6px);border:1px solid rgba(255,179,160,.25);border-radius:8px;padding:.3rem .65rem}
+  .craft-stack{display:flex;flex-direction:column;gap:1.6rem}
+
+  /* ── process timeline strip (Liva move) ── */
+  .process{display:grid;grid-template-columns:repeat(5,1fr);gap:2rem;align-items:start;margin-top:1rem}
+  .p-step{flex:1;position:relative;padding-top:3.4rem}
+  .p-step .node{position:absolute;top:0;left:0;width:2.9rem;height:2.9rem;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:var(--bg2);border:1px solid rgba(110,95,199,.45);font-size:1.1rem;box-shadow:0 0 24px rgba(110,95,199,.25)}
+  .p-step:not(:last-child)::after{content:"";position:absolute;top:1.4rem;left:3.4rem;right:-2.1rem;height:1px;
+    background:linear-gradient(90deg,rgba(110,95,199,.5),rgba(180,122,154,.25));}
+  .p-step .num{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--rose);letter-spacing:.06em}
+  .p-step h5{font-size:.95rem;margin:.15rem 0 .3rem}
+  .p-step p{font-size:.8rem;color:var(--dim)}
+
+  /* ── tools grid (Liva's "tools I use", real stack) ── */
+  .tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem}
+  .tool{display:flex;align-items:center;gap:.9rem;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.85rem 1.1rem;transition:border-color .2s}
+  .tool:hover{border-color:var(--rose)}
+  .tool .t-ico{width:2.2rem;height:2.2rem;border-radius:9px;background:rgba(110,95,199,.15);border:1px solid rgba(110,95,199,.35);display:flex;align-items:center;justify-content:center;font-size:1rem;flex:none}
+  .tool .t-name{font-family:'JetBrains Mono',monospace;font-size:.85rem}
+  .tool .t-use{font-size:.72rem;color:var(--dim)}
+
+  /* ── closing ── */
+  .contact{text-align:center;padding:7rem 5vw}
+  .contact h2{font-size:clamp(2.4rem,5vw,4.4rem);margin-bottom:2.2rem}
+  .contact p{color:var(--dim);margin-bottom:2.4rem}
+  .contact .mail{display:inline-block;background:var(--rose);color:#0B0E1A;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1rem;padding:1.15rem 2.4rem;border-radius:10px;box-shadow:0 0 44px rgba(180,122,154,.45);transition:all .2s}
+  .contact .mail:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 0 64px rgba(180,122,154,.65)}
+
+  footer{padding:2rem 5vw 2.6rem;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--dim);border-top:1px solid var(--line);flex-wrap:wrap;gap:.6rem}
+  footer .rose{color:var(--rose)}
+
+  /* code panel with syntax colors */
+  .code-panel{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 30px 70px -30px rgba(0,0,0,.7)}
+  .code-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line)}
+  .code-bar .dot{width:10px;height:10px;border-radius:50%}
+  .code-bar .r{background:#D98FA0}.code-bar .y{background:#E3CBAE}.code-bar .g{background:#8FB99E}
+  .code-bar .fname{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--dim)}
+  .code-body{font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.85;padding:14px 16px}
+  .k{color:#B394D9}.s{color:#BCCFA8}.c{color:#6f6880;font-style:italic}.fn{color:#9FAEDC}.attr{color:#D9BE9A}.val{color:var(--rose)}
+  .code-body .ln{display:block}
+  .typing{display:inline-block;width:8px;height:15px;background:var(--rose);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* interactive cursor: dot leads, ring trails, ring expands on interactive elements */
+  .cursor-dot,.cursor-ring{position:fixed;top:0;left:0;z-index:9999;pointer-events:none;border-radius:50%;opacity:0;transition:opacity .25s}
+  .cursor-dot{width:6px;height:6px;margin:-3px 0 0 -3px;background:var(--rose);box-shadow:0 0 12px rgba(180,122,154,.8)}
+  .cursor-ring{width:34px;height:34px;margin:-17px 0 0 -17px;border:1px solid rgba(180,122,154,.45);
+    transition:opacity .25s,width .22s,height .22s,margin .22s,border-color .22s,background .22s}
+  .cursor-ring.on{width:58px;height:58px;margin:-29px 0 0 -29px;border-color:var(--rose);background:rgba(180,122,154,.07)}
+  body.has-cursor, body.has-cursor a, body.has-cursor button{cursor:none}
+  @media(hover:none){.cursor-dot,.cursor-ring{display:none}body.has-cursor,body.has-cursor a{cursor:auto}}
+  @media(prefers-reduced-motion:reduce){.cursor-ring{transition:none}}
+
+  /* checkbox field: keep hero content above the canvas */
+  header>div{position:relative;z-index:1}
+  header{position:relative}
+
+  @media(min-width:921px) and (min-aspect-ratio:3/2){
+    .float-panel{bottom:2%;right:-7%;width:38%;min-width:0;max-height:44%;
+      overflow:hidden;
+      -webkit-mask-image:linear-gradient(#000 72%,transparent 100%);
+      mask-image:linear-gradient(#000 72%,transparent 100%)}
+  }
+  @media(max-width:920px){
+    header{grid-template-columns:1fr;padding-top:7rem;min-height:auto}
+    .hero-visual{max-width:440px;margin:0 auto;padding-bottom:3rem}
+    .float-panel{right:0;bottom:-4%;width:82%}
+    .glass.g-focus{right:0}
+    .glass.g-years{left:0;bottom:16%}
+    .stats{grid-template-columns:repeat(2,1fr);margin:0}
+    .stats-sec{padding:4rem 5vw}
+    .craft-grid{grid-template-columns:1fr!important}
+    .repo-item{grid-template-columns:1fr;gap:.4rem}
+    .repo-stack{text-align:left}
+    nav .links{display:none}
+    .logo > span[style]{display:none}
+    nav{padding:12px 4vw}
+    .process{flex-direction:column;gap:2.2rem}
+    .p-step:not(:last-child)::after{top:3.4rem;left:1.4rem;right:auto;bottom:auto;height:auto;width:1px;
+      background:linear-gradient(180deg,rgba(110,95,199,.5),rgba(180,122,154,.25))}
+    .about-split{grid-template-columns:1fr}
+    .tools-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div><div class="glow g1"></div><div class="glow g2"></div>
+
+<nav>
+  <a class="logo" href="#top">mariane<span class="she">.ai</span><span style="color:var(--dim);font-weight:400;font-size:.72rem;margin-left:.6rem">· I give executives their day back.</span></a>
+  <div class="links"><a href="#work">work</a><a href="#value">value</a><a href="#stats">stats</a><a href="#method">method</a></div>
+  <a class="nav-cta" href="mailto:workwithmarianesophia@gmail.com">$ hire_me</a>
+</nav>
+
+<main id="top">
+<header>
+  <div>
+    <div class="badge"><span class="ok">●</span> ai-powered executive assistant</div>
+    <div class="boot">
+      <span class="ok">✓</span> boot: role=executive_assistant · ai_powered<br>
+      <span class="ok">✓</span> stack: n8n · python · ai_agents<br>
+      <span class="ok">✓</span> location: manila → remote · <span class="rose">status: shipping</span>
+    </div>
+    <h1>AI-powered EA, here to <span class="rose">protect your time.</span></h1>
+    <p class="lede">You focus on what only you can do. <b>The rest runs on systems I built and keep running.</b></p>
+    <div class="hero-cta">
+      <a class="btn-primary" href="#work">see the ten tools</a>
+      <a class="btn-ghost" href="mailto:workwithmarianesophia@gmail.com">workwithmarianesophia@gmail.com</a>
+    </div>
+    <p class="mono hook" style="color:var(--rose);font-size:.9rem;margin-top:2.2rem"># <span style="color:var(--ink)">your busywork, handled.</span></p>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-halo" aria-hidden="true"></div>
+    <img class="hero-photo" src="assets/hero-small.jpg" alt="" fetchpriority="high">
+    <div class="code-panel float-panel">
+      <div class="code-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">quarter.py</span></div>
+      <div class="code-body">
+        <span class="ln"><span class="k">class</span> <span class="fn">Mariane</span>:</span>
+        <span class="ln">&nbsp;&nbsp;<span class="attr">role</span> = <span class="s">"executive"</span></span>
+        <span class="ln">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="s">"assistant"</span></span>
+        <span class="ln">&nbsp;&nbsp;<span class="attr">method</span> = <span class="s">"ai-assisted"</span></span>
+        <span class="ln"></span>
+        <span class="ln">&nbsp;&nbsp;<span class="k">def</span> <span class="fn">ship_quarter</span>(self):</span>
+        <span class="ln">&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">for</span> idea <span class="k">in</span> problems:</span>
+        <span class="ln">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.build(idea)</span>
+        <span class="ln">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c"># logic: mine</span></span>
+        <span class="ln">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ai.implement()</span>
+        <span class="ln">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c"># and model's</span></span>
+        <span class="ln"></span>
+        <span class="ln"><span class="c"># ── output ────────</span></span>
+        <span class="ln"><span class="val">✓</span> daily digest</span>
+        <span class="ln"><span class="val">✓</span> calendar agent</span>
+        <span class="ln"><span class="val">✓</span> email triage</span>
+        <span class="ln"><span class="val">…</span> <span class="typing"></span></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="value">
+  <div class="sec-head"><h2>what this <span class="rose">buys you</span></h2></div>
+  <div class="craft-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem">
+    <div class="card"><span class="chip rose">☀</span><h4>Mornings that start quiet</h4>
+      <p>Your report and calendar review are done by 7 a.m. Conflicts and missing rooms are flagged before they cost you.</p>
+      <p class="mono" style="color:var(--peach);font-size:.75rem;margin-top:.8rem">from: daily digest · calendar agent</p></div>
+    <div class="card"><span class="chip">✉</span><h4>An inbox that sorts itself</h4>
+      <p>Email sorts itself and learns from corrections. You get pinged only when it matters.</p>
+      <p class="mono" style="color:var(--peach);font-size:.75rem;margin-top:.8rem">from: email triage classifier</p></div>
+    <div class="card"><span class="chip rose">☕</span><h4>Walk in prepared</h4>
+      <p>You know who you're meeting before you walk in. Every profile is sourced and verified.</p>
+      <p class="mono" style="color:var(--peach);font-size:.75rem;margin-top:.8rem">from: call prep · attendee briefing</p></div>
+    <div class="card"><span class="chip">⏱</span><h4>Follow-through that happens</h4>
+      <p>Minutes and recaps go out the same day. What you discussed gets done, not just noted.</p>
+      <p class="mono" style="color:var(--peach);font-size:.75rem;margin-top:.8rem">from: recap assistant · report sync</p></div>
+    <div class="card"><span class="chip rose">₱</span><h4>Money moves on time</h4>
+      <p>Budgets and reimbursements move through approvals without anyone chasing anyone.</p>
+      <p class="mono" style="color:var(--peach);font-size:.75rem;margin-top:.8rem">from: finance workflows</p></div>
+    <div class="card"><span class="chip">▦</span><h4>Plan the week on evidence</h4>
+      <p>You plan the week on what your calendar can actually hold.</p>
+      <p class="mono" style="color:var(--peach);font-size:.75rem;margin-top:.8rem">from: capacity analyzer · daily digest</p></div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="sec-head"><h2>work<span class="rose">.log</span></h2></div>
+  <div class="repo">
+    <div class="repo-head"><span>~/mariane/production-tools</span><span class="stars">★ 10 shipped · 3+ live daily · 0 abandoned</span></div>
+    <div class="repo-item"><span class="repo-date">SEP 2026</span><span class="repo-name">executive-daily-digest <span class="pill live">LIVE · DAILY</span></span><span class="repo-stack"><b>n8n</b> · outline · slack</span><p class="repo-blurb">The weekday report builds itself from your calendar. Delivered each morning, ready to read.</p></div>
+    <div class="repo-item"><span class="repo-date">AUG 2026</span><span class="repo-name">calendar-intelligence-agent <span class="pill live">LIVE · DAILY</span></span><span class="repo-stack"><b>python</b> · calendar api</span><p class="repo-blurb">Flags conflicts, unconfirmed meetings, and missing rooms before your day starts. Changes need your approval.</p></div>
+    <div class="repo-item"><span class="repo-date">SEP 2026</span><span class="repo-name">self-correcting-email-triage <span class="pill ship">SHIPPED</span></span><span class="repo-stack"><b>n8n</b> · gmail · sheets</span><p class="repo-blurb">Sorts email and learns from its mistakes. Five known error cases now pass.</p></div>
+    <div class="repo-item"><span class="repo-date">SEP 2026</span><span class="repo-name">company-finance-workflows <span class="pill live">LIVE</span></span><span class="repo-stack"><b>blue</b> · approvals</span><p class="repo-blurb">Requests move through staged approvals with notifications. Used company-wide.</p></div>
+    <div class="repo-item"><span class="repo-date">SEP 2026</span><span class="repo-name">calendar-capacity-analyzer <span class="pill ship">DELIVERED</span></span><span class="repo-stack"><b>python</b> · pdf</span><p class="repo-blurb">Measured how much recording time your schedule can absorb, from real calendar history. Delivered as a PDF.</p></div>
+    <div class="repo-item"><span class="repo-date">JUL–SEP</span><span class="repo-name">persistent-ai-assistants <span class="pill live">IN DAILY USE</span></span><span class="repo-stack"><b>agents</b> · memory · cron</span><p class="repo-blurb">Two agents with long-term memory. One handles planning and reports; the other is my chief of staff.</p></div>
+    <div class="repo-item"><span class="repo-date">JUL–SEP</span><span class="repo-name">planning-report-sync <span class="pill live">IN DAILY USE</span></span><span class="repo-stack"><b>calendar</b> · outline</span><p class="repo-blurb">Approved tasks publish to the calendar and the daily report. No re-typing.</p></div>
+    <div class="repo-item"><span class="repo-date">AUG 2026</span><span class="repo-name">plain-english-quality-layer <span class="pill ship">SHIPPED · IN USE</span></span><span class="repo-stack"><b>skill pkg</b> · python audit</span><p class="repo-blurb">A Python auditor that flags unclear writing without rewriting it, and proves no facts changed.</p></div>
+    <div class="repo-item"><span class="repo-date">JUL 2026</span><span class="repo-name">sales-call-prep-recap <span class="pill ship">SHIPPED · IN USE</span></span><span class="repo-stack"><b>prompts</b> · research</span><p class="repo-blurb">Pre-call research, post-call recaps, follow-ups timed to each client.</p></div>
+    <div class="repo-item"><span class="repo-date">SEP 2026</span><span class="repo-name">meeting-attendee-briefing <span class="pill ship">SHIPPED · IN USE</span></span><span class="repo-stack"><b>verification</b> · docs</span><p class="repo-blurb">Attendee profiles with identity verified first. Every claim carries evidence.</p></div>
+  </div>
+</section>
+
+<section class="stats-sec" id="stats" style="padding-left:0;padding-right:0">
+  <div class="sec-head" style="padding:0 5vw"><h2>stats<span class="rose">.json</span></h2></div>
+  <div class="stats">
+    <div class="stat"><span class="chip rose">▣</span><div><div class="big">10</div><div class="what">production tools shipped</div></div></div>
+    <div class="stat"><span class="chip">⟳</span><div><div class="big">3<span class="u">+</span></div><div class="what">running unattended, daily</div></div></div>
+    <div class="stat"><span class="chip rose">Ø</span><div><div class="big">0</div><div class="what">engineering department</div></div></div>
+    <div class="stat"><span class="chip">Σ</span><div><div class="big">100<span class="u">%</span></div><div class="what">built AI-assisted, shipped solo</div></div></div>
+  </div>
+</section>
+
+<section id="method">
+  <div class="sec-head"><h2>method<span class="rose">.md</span></h2></div>
+  <div class="about-split">
+    <figure class="about-photo">
+      <img src="assets/portrait-small.jpg" alt="" loading="lazy">
+    </figure>
+    <div class="craft-stack">
+      <div class="card"><h4><span class="mono">01_</span>Ship into real conditions</h4><p>Built under deadline pressure, in real work. Several run unattended every day.</p></div>
+      <div class="card"><h4><span class="mono">02_</span>Safety before cleverness</h4><p>Changes need approval. Money moves have gates. Broken services get replaced, not patched.</p></div>
+      <div class="card"><h4><span class="mono">03_</span>Own the whole lifecycle</h4><p>I design, build, test, launch, and monitor each tool. When one breaks silently, I rebuild it.</p></div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:5rem">what runs <span class="rose">behind it</span></h2>
+  <div class="tools-grid">
+    <div class="tool"><span class="t-ico">✦</span><div><div class="t-name">claude</div><div class="t-use">writes and debugs code with me</div></div></div>
+    <div class="tool"><span class="t-ico">⟳</span><div><div class="t-name">ollama</div><div class="t-use">local model serving, private runs</div></div></div>
+    <div class="tool"><span class="t-ico">⌨</span><div><div class="t-name">codex</div><div class="t-use">big refactors and code review</div></div></div>
+    <div class="tool"><span class="t-ico">◕</span><div><div class="t-name">hermes</div><div class="t-use">the agents I build and run daily</div></div></div>
+    <div class="tool"><span class="t-ico">⚙</span><div><div class="t-name">n8n</div><div class="t-use">workflow automation</div></div></div>
+    <div class="tool"><span class="t-ico">🐍</span><div><div class="t-name">python</div><div class="t-use">scripts, audits, schedulers</div></div></div>
+  </div>
+
+  <h2 style="margin-top:5rem">how I <span class="rose">build</span></h2>
+  <div class="process">
+    <div class="p-step"><span class="node">🔍</span><div class="num">01</div><h5>Dig</h5><p>Find the real bottleneck, not the stated one.</p></div>
+    <div class="p-step"><span class="node">✎</span><div class="num">02</div><h5>Design</h5><p>Define scope, safety gates, and who approves what.</p></div>
+    <div class="p-step"><span class="node">⚙</span><div class="num">03</div><h5>Build</h5><p>AI writes the code. Logic and testing are mine.</p></div>
+    <div class="p-step"><span class="node">🚀</span><div class="num">04</div><h5>Ship</h5><p>Real workloads, real deadlines. No demo folder.</p></div>
+    <div class="p-step"><span class="node">🛡</span><div class="num">05</div><h5>Maintain</h5><p>Monitor, harden, rebuild after silent failures.</p></div>
+  </div>
+</section>
+
+<section class="contact">
+  <h2>Ready to get <span class="rose">your time back?</span></h2>
+  <a class="mail" href="mailto:workwithmarianesophia@gmail.com">workwithmarianesophia@gmail.com</a>
+  <p class="mono" style="color:var(--dim);font-size:.78rem;margin-top:1.6rem">remote · manila-based. You keep every automation I build.</p>
+</section>
+</main>
+
+<footer>
+  <span>© 2026 mariane sophia</span>
+  <span>built ai-assisted. <span class="rose">maintained daily.</span></span>
+</footer>
+  <script>
+    const dot=document.createElement('div');dot.className='cursor-dot';
+    const ring=document.createElement('div');ring.className='cursor-ring';
+    document.body.append(dot,ring);
+    document.body.classList.add('has-cursor');
+    let x=innerWidth/2,y=innerHeight/2,rx=x,ry=y;
+    addEventListener('mousemove',e=>{x=e.clientX;y=e.clientY;dot.style.opacity=1;ring.style.opacity=1});
+    addEventListener('mouseleave',()=>{dot.style.opacity=0;ring.style.opacity=0});
+    (function loop(){rx+=(x-rx)*.14;ry+=(y-ry)*.14;
+      dot.style.transform=`translate(${x}px,${y}px)`;
+      ring.style.transform=`translate(${rx}px,${ry}px)`;
+      requestAnimationFrame(loop)})();
+    const HOT='a, .stat, .card, .tool, .repo-item, .pill';
+    document.addEventListener('mouseover',e=>{if(e.target.closest(HOT))ring.classList.add('on')});
+    document.addEventListener('mouseout',e=>{if(e.target.closest(HOT))ring.classList.remove('on')});
+  </script>
+  <script>
+  /* Velvet Plum sky: blinking stars (deep-dip "blinkers" + soft twinkles) always alive,
+     + DSM-style hover constellations. Final merge. */
+  (function(){
+    if(!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
+    const cv=document.createElement('canvas'); cv.setAttribute('aria-hidden','true');
+    cv.style.cssText='position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:1';
+    document.body.prepend(cv);
+    const ctx=cv.getContext('2d');
+    const BLUSH='232,162,200', LILAC='201,191,242', IVORY='243,233,236';
+    const R=200, LINK=150, N=85;
+    let W=0,H=0,dpr=1,stars=[];
+    let on=false,s=0,cx=-9999,cy=-9999,tx=-9999,ty=-9999,raf=0,vis=true,t0=performance.now();
+    const smooth=t=>t<=0?0:t>=1?1:t*t*(3-2*t);
+    function setup(){
+      W=innerWidth;H=innerHeight;dpr=Math.min(devicePixelRatio||1,2);
+      cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+      stars=[];
+      let tries=0;
+      while(stars.length<N && tries<N*50){
+        tries++;
+        const x=Math.random()*W, y=Math.random()*H;
+        if(stars.some(n=>Math.hypot(n.x-x,n.y-y)<55))continue;
+        stars.push({x,y,
+          vx:(Math.random()-.5)*.08, vy:(Math.random()-.5)*.08,
+          r:1.0+Math.random()*1.2,
+          hue:Math.random()<.55?BLUSH:(Math.random()<.5?LILAC:IVORY),
+          ph:Math.random()*6.28, sp:.45+Math.random()*1.25,
+          blink:Math.random()<.12});
+      }
+      draw(performance.now());
+    }
+    function draw(now,motion){
+      const t=(now-t0)/1000;
+      ctx.clearRect(0,0,W,H);
+      if(motion){
+        for(const n of stars){n.x+=n.vx;n.y+=n.vy;
+          if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;}
+      }
+      // glowing stars: radial bloom halo + core; blinkers dip; spikes on bright ones
+      for(const n of stars){
+        const wave=.5+.5*Math.sin(t*n.sp+n.ph);
+        const tw=n.blink?(wave>.82?.06:.18+.42*wave):(.18+.34*wave);
+        const d=Math.hypot(n.x-cx,n.y-cy);
+        const near=d<R;
+        const boost=near?smooth(1-d/R)*s*.55:0;
+        const a=Math.min(1,tw+boost);
+        if(a<.02)continue;
+        const r=n.r*(near?1.3:1);
+        // soft glow bloom (radial gradient, 4-5x core radius)
+        const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,r*3.2);
+        g.addColorStop(0,'rgba('+n.hue+','+(a*.3).toFixed(3)+')');
+        g.addColorStop(.35,'rgba('+n.hue+','+(a*.09).toFixed(3)+')');
+        g.addColorStop(1,'rgba('+n.hue+',0)');
+        ctx.fillStyle=g;
+        ctx.beginPath();ctx.arc(n.x,n.y,r*5,0,7);ctx.fill();
+        // bright core
+        ctx.fillStyle='rgba('+n.hue+','+a.toFixed(3)+')';
+        ctx.beginPath();ctx.arc(n.x,n.y,r,0,7);ctx.fill();
+        // tiny white-hot center for the brightest phase
+        if(a>.55){
+          ctx.fillStyle='rgba(243,233,236,'+((a-.4)*.9).toFixed(3)+')';
+          ctx.beginPath();ctx.arc(n.x,n.y,r*.5,0,7);ctx.fill();
+        }
+        // 4-point diffraction spikes on the brightest stars only
+        if(r>2.2&&a>.62){
+          const L=r*4.5*(0.7+0.3*Math.min(1,a));
+          ctx.strokeStyle='rgba('+n.hue+','+(a*.5).toFixed(3)+')';
+          ctx.lineWidth=.9;
+          ctx.beginPath();
+          ctx.moveTo(n.x-L,n.y);ctx.lineTo(n.x+L,n.y);
+          ctx.moveTo(n.x,n.y-L);ctx.lineTo(n.x,n.y+L);
+          ctx.stroke();
+
+        }
+      }
+      // constellation links near cursor (DSM-style), scaled by s
+      if(cx>-999&&s>.05){
+        for(let a=0;a<stars.length;a++){
+          const A=stars[a], dA=Math.hypot(A.x-cx,A.y-cy);
+          if(dA>R)continue;
+          for(let b=a+1;b<stars.length;b++){
+            const B=stars[b], dB=Math.hypot(B.x-cx,B.y-cy);
+            if(dB>R)continue;
+            const dist=Math.hypot(A.x-B.x,A.y-B.y);
+            if(dist>LINK)continue;
+            const m=Math.min(smooth(1-dA/R),smooth(1-dB/R))*s;
+            ctx.strokeStyle='rgba('+A.hue+','+((1-dist/LINK)*.6*m).toFixed(3)+')';
+            ctx.lineWidth=1;
+            ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();
+          }
+        }
+      }
+    }
+    function tick(now){
+      cx+=(tx-cx)*.22;cy+=(ty-cy)*.22;
+      s+=((on?1:0.45)-s)*(on?.14:.06);
+      draw(now,true);
+      raf=vis?requestAnimationFrame(tick):0;
+    }
+    const wake=()=>{if(!raf&&vis)raf=requestAnimationFrame(tick)};
+    const aim=e=>{tx=e.clientX;ty=e.clientY;if(cx<-999){cx=tx;cy=ty}on=true;wake()};
+    addEventListener('mousemove',aim,{passive:true});
+    addEventListener('pointermove',e=>{if(e.pointerType==='mouse'||e.pointerType==='pen')aim(e)},{passive:true});
+    document.documentElement.addEventListener('mouseleave',()=>{on=false;wake()});
+    addEventListener('resize',setup);
+    document.addEventListener('visibilitychange',()=>{vis=!document.hidden;wake()});
+    setup();
+    raf=requestAnimationFrame(tick);
+  })();
+  </script>
+
+
+
+
+
+
+
+</body>
+</html>
