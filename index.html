@@ -570,7 +570,7 @@
       try{
         const data=Object.fromEntries(new FormData(form));
         await fetch(ENDPOINT,{method:'POST',body:new URLSearchParams(data)});
-        form.innerHTML='<p style="font-size:1.15rem;margin:.4rem 0 1rem">✓ request sent — I reply within the day.</p><p style="color:var(--dim);font-size:.9rem">Urgent? workwithmarianesophia@gmail.com</p>';
+        form.innerHTML='<p style="font-size:1.05rem;margin:.4rem 0 .8rem">✓ Request sent.</p><p style="color:var(--dim);font-size:.85rem;margin:0 0 .9rem;line-height:1.6">My acknowledgment email may land in spam on first contact — check once and mark it “Not spam” so future replies arrive clean.<br>My actual reply reaches you within the day, from <b>workwithmarianesophia@gmail.com</b>.</p>';
       }catch(err){ note.textContent='send failed — email me directly: workwithmarianesophia@gmail.com'; btn.disabled=false; btn.textContent=old; }
     });
   })();
