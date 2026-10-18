@@ -15,7 +15,7 @@
     --card:#191430; --card2:#201838; --radius:16px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth;font-size:clamp(15px,.92vw,20px)}
+  html{scroll-behavior:smooth;font-size:clamp(13px,1.11vw,32px)}
   body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   .mono{font-family:'JetBrains Mono',monospace}
   .serif{font-family:'Instrument Serif',serif}
@@ -50,10 +50,10 @@
   .nav-cta:hover{background:var(--rose);color:#0B0E1A;box-shadow:0 0 24px rgba(180,122,154,.5)}
 
   /* ── hero: Liva's floating glass cards + CodeCraft's photo-in-glow ── */
-  header{min-height:100vh;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:2rem;padding:8rem 5vw 4rem;max-width:1360px;margin:0 auto}
+  header{min-height:100vh;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:2rem;padding:8rem 5vw 4rem;max-width:94.4rem;margin:0 auto}
   .boot{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--dim);margin-bottom:1.4rem;line-height:1.9}
   .boot .ok{color:#A8C4B8}.boot .rose{color:var(--rose)}
-  h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(2.1rem,7vw,5.7rem);line-height:1.04;margin-bottom:1.3rem;letter-spacing:-.01em}
+  h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(2.1rem,5.2vw,10.2rem);line-height:1.04;margin-bottom:1.3rem;letter-spacing:-.01em}
   h1 .rose{color:var(--rose);font-style:italic}
   .lede{font-size:1.16rem;color:var(--dim);max-width:32rem}
   .lede b{color:var(--ink);font-weight:600}
@@ -84,7 +84,7 @@
   .glass.g-years .what{font-size:.72rem;color:var(--dim)}
 
   /* ── section scaffolding ── */
-  section{padding:5rem 5vw;max-width:1220px;margin:0 auto}
+  section{padding:5rem 5vw;max-width:84.7rem;margin:0 auto}
   .sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2.4rem;flex-wrap:wrap;gap:.8rem}
   h2{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(2.1rem,3.6vw,3.2rem)}
   h2 .rose{color:var(--rose);font-style:italic}
@@ -190,8 +190,6 @@
   header>div{position:relative;z-index:1}
   header{position:relative}
 
-  @media(min-width:1800px){
-    header{max-width:1680px}
     section{max-width:1540px}
     footer{max-width:1540px;margin-inline:auto}
     nav{max-width:1680px}
