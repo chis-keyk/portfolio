@@ -402,18 +402,18 @@
       <p class="intake-lede">Tell me what to take off your plate. I reply within the day.</p>
       <form id="intake-form" autocomplete="on">
         <div class="f-row two">
-          <label><span>name</span><input name="name" required maxlength="80"></label>
-          <label><span>company</span><input name="company" required maxlength="80"></label>
+          <label><span>name</span><input name="name" required maxlength="80" required></label>
+          <label><span>company</span><input name="company" required maxlength="80" required></label>
         </div>
         <div class="f-row two">
-          <label><span>mobile number</span><input name="mobile" type="tel" required maxlength="30"></label>
-          <label><span>email</span><input name="email" type="email" required maxlength="120"></label>
+          <label><span>mobile number</span><input name="mobile" type="tel" required maxlength="30" required></label>
+          <label><span>email</span><input name="email" type="email" required maxlength="120" required></label>
         </div>
         <label class="f-wide"><span>what help do you need?</span>
-          <textarea name="help" rows="3" required maxlength="600" placeholder="e.g. my inbox and calendar eat my mornings..."></textarea>
+          <textarea name="help" rows="3" required maxlength="600" placeholder="e.g. my inbox and calendar eat my mornings..." required></textarea>
         </label>
         <label class="f-consent">
-          <input type="checkbox" name="consent" required>
+          <input type="checkbox" name="consent" required required>
           <span>I agree to be contacted about this request. My details are used only for this conversation.</span>
         </label>
         <button class="btn-primary f-send" type="submit">send request</button>
