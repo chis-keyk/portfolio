@@ -15,7 +15,7 @@
     --card:#191430; --card2:#201838; --radius:16px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;font-size:clamp(15px,.92vw,20px)}
   body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   .mono{font-family:'JetBrains Mono',monospace}
   .serif{font-family:'Instrument Serif',serif}
@@ -190,6 +190,12 @@
   header>div{position:relative;z-index:1}
   header{position:relative}
 
+  @media(min-width:1800px){
+    header{max-width:1680px}
+    section{max-width:1540px}
+    footer{max-width:1540px;margin-inline:auto}
+    nav{max-width:1680px}
+  }
   @media(min-width:921px) and (min-aspect-ratio:3/2){
     .float-panel{bottom:2%;right:-7%;width:38%;min-width:0;max-height:44%;
       overflow:hidden;
